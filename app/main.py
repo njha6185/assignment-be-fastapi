@@ -10,11 +10,11 @@ from app.utils.rate_limiter import RateLimitMiddleware
 # Lifespan context to replace on_event("startup")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("🔧 App startup: Creating tables and seeding data...")
+    print("App startup: Creating tables and seeding data...")
     create_tables()
     seed_data()
     yield
-    print("🛑 App shutdown (if needed cleanup)")
+    print("App shutdown (if needed cleanup)")
 
 app = FastAPI(
     title="Basic FastAPI App",

@@ -8,9 +8,9 @@ from app.models.db.database import engine, Base
 from app.models.Employee import Employee
 
 def create_tables():
-    print("🔧 Creating tables if not exist...")
+    print("Creating tables if not exist...")
     Base.metadata.create_all(bind=engine)
-    print("✅ Tables ready.")
+    print("Tables ready.")
 
 if __name__ == "__main__":
     create_tables()

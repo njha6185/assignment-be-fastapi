@@ -86,9 +86,9 @@ def seed_data():
     
         db.add_all(employees)
         db.commit()
-        print("✅ Seed data inserted.")
+        print("Seed data inserted.")
     else:
-        print("⚠️ Seed data already exists.")
+        print("Seed data already exists.")
     db.close()
 
 if __name__ == "__main__":

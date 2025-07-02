@@ -14,16 +14,22 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         client_ip = request.client.host
         now = time.time()
 
-        if client_ip not in request_store:
-            request_store[client_ip] = []
+        timestamps = request_store.get(client_ip, [])
+        valid_timestamps = [ts for ts in timestamps if now - ts < TIME_WINDOW]
 
-        request_store[client_ip] = [ts for ts in request_store[client_ip] if now - ts < TIME_WINDOW]
-
-        if len(request_store[client_ip]) >= RATE_LIMIT:
+        if len(valid_timestamps) >= RATE_LIMIT:
             return JSONResponse(
                 status_code=429,
                 content={"detail": f"Too Many Requests: limit is {RATE_LIMIT} per {TIME_WINDOW} seconds."}
             )
 
-        request_store[client_ip].append(now)
+        # Save updated timestamps
+        valid_timestamps.append(now)
+        request_store[client_ip] = valid_timestamps
+
+        # Optional: cleanup if no timestamps
+        if not valid_timestamps:
+            request_store.pop(client_ip, None)
+
         return await call_next(request)
+
